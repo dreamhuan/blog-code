@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.bootcss.com/rxjs/6.0.0-alpha.3/Rx.min.js"></script>
+    <title>Rxjs</title>
+</head>
+
+<body>
+    <input id="a" type="text">
+    <input id="b" type="text">
+    <div id="c"></div>
+    <script>
+        let a = new Rx.Subject();
+        let b = new Rx.Subject();
+        let doublea = a.map(d => d * 2);
+        let squareb = b.map(d => d * d);
+        let c = doublea
+            .combineLatest(squareb, (total, now) => total + now)
+            .subscribe(console.log)
+        a.next(1);
+        b.next(2);
+        a.next(10);
+
+        let a$ = Rx.Observable
+            .fromEvent(document.getElementById('a'), 'input')
+            .debounceTime(300)
+            .map(e => document.getElementById('a').value)
+            .map(d => parseInt(d))
+        // .subscribe(console.log);
+        let b$ = Rx.Observable
+            .fromEvent(document.getElementById('b'), 'input')
+            .debounceTime(300)
+            .map(e => document.getElementById('b').value)
+            .map(d => parseInt(d))
+        // .subscribe(console.log);
+
+        a$
+            .combineLatest(b$, (total, now) => total + now)
+            .subscribe(d => document.getElementById('c').innerText = d)
+    </script>
+</body>
+
+</html>

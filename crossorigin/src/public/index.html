@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>跨域</title>
+</head>
+
+<body>
+    <button onclick="ajax1('http://www.aaa.com:8080/iv1/hello')">www.aaa.com:8080</button>
+    <button onclick="ajax1('http://aaa.com:8080/iv1/hello')">aaa.com:8080</button>
+    <button onclick="ajax1('http://www.bbb.com:8080/iv1/hello')">www.bbb.com:8080</button>
+    <button onclick="ajax1('http://www.aaa.com:8081/iv1/hello')">www.aaa.com:8081</button>
+    <button onclick="ajax1('http://127.0.0.1:8080/iv1/hello')">127.0.0.1:8080</button>
+    <button onclick="ajax('http://www.bbb.com:8081/iv1/hello')">get www.bbb.com:8081</button>
+    <button onclick="jsonp()">jsonp www.bbb.com:8081</button>
+    <button onclick="ajax('http://www.aaa.com:8080/iv1/proxy')">www.aaa.com:8080后端代理www.bbb.com:8081</button>
+</body>
+<script>
+    function ajax(url) {
+        let xhr = new XMLHttpRequest()
+        xhr.open('GET', url)
+        xhr.onload = e => {
+            if (xhr.status === 200) {
+                console.log(xhr.response)
+            } else {
+                console.log(xhr.status)
+            }
+        }
+        xhr.send()
+    }
+
+    function ajax1(url) {
+        fetch(url)
+            .then(res => res.text())
+            .then(data => {
+                console.log(data)
+            })
+    }
+
+    function jsonp() {
+        const url = 'http://www.bbb.com:8081/iv1/jsonp?funName=logData';
+        window.logData = function (data) {
+            console.log(data)
+        }
+        const script = document.createElement('script');
+        script.setAttribute('src', url);
+        document.querySelector('body').appendChild(script);
+    }
+</script>
+
+</html>
